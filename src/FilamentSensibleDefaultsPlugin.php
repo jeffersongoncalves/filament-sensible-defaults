@@ -9,9 +9,6 @@ use Filament\Infolists;
 use Filament\Notifications;
 use Filament\Pages;
 use Filament\Panel;
-use Filament\Schemas;
-use Filament\Support\Enums\Width;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables;
 use Illuminate\Validation\ValidationException;
 
@@ -207,40 +204,40 @@ class FilamentSensibleDefaultsPlugin implements Plugin
     protected function applyActionDefaults(): void
     {
         Actions\ActionGroup::configureUsing(function (Actions\ActionGroup $action) {
-            return $action->icon(Heroicon::EllipsisVertical);
+            return $action->icon('heroicon-m-ellipsis-vertical');
         });
 
         Actions\Action::configureUsing(function (Actions\Action $action) {
             return $action
                 ->translateLabel()
-                ->modalWidth(Width::Medium)
+                ->modalWidth('md')
                 ->closeModalByClickingAway(false);
         });
 
         Actions\CreateAction::configureUsing(function (Actions\CreateAction $action) {
             return $action
-                ->icon(Heroicon::Plus)
+                ->icon('heroicon-m-plus')
                 ->hiddenLabel()
                 ->createAnother(false);
         });
 
         Actions\EditAction::configureUsing(function (Actions\EditAction $action) {
             return $action
-                ->icon(Heroicon::PencilSquare)
+                ->icon('heroicon-m-pencil-square')
                 ->hiddenLabel()
                 ->button();
         });
 
         Actions\DeleteAction::configureUsing(function (Actions\DeleteAction $action) {
             return $action
-                ->icon(Heroicon::Trash)
+                ->icon('heroicon-m-trash')
                 ->hiddenLabel()
                 ->button();
         });
 
         Actions\ViewAction::configureUsing(function (Actions\ViewAction $action) {
             return $action
-                ->icon(Heroicon::Eye)
+                ->icon('heroicon-m-eye')
                 ->hiddenLabel()
                 ->button();
         });
@@ -344,28 +341,20 @@ class FilamentSensibleDefaultsPlugin implements Plugin
     {
         $formats = config('sensible-defaults.formats', []);
 
-        Schemas\Schema::configureUsing(function (Schemas\Schema $schema) use ($formats) {
-            return $schema
-                ->defaultCurrency($formats['currency'] ?? 'brl')
-                ->defaultDateDisplayFormat($formats['date_display_format'] ?? 'M j, Y')
-                ->defaultIsoDateDisplayFormat($formats['iso_date_display_format'] ?? 'L')
-                ->defaultDateTimeDisplayFormat($formats['datetime_display_format'] ?? 'M j, Y H:i:s')
-                ->defaultIsoDateTimeDisplayFormat($formats['iso_datetime_display_format'] ?? 'LLL')
-                ->defaultNumberLocale($formats['number_locale'] ?? null)
-                ->defaultTimeDisplayFormat($formats['time_display_format'] ?? 'H:i:s')
-                ->defaultIsoTimeDisplayFormat($formats['iso_time_display_format'] ?? 'LT');
-        });
+        // Filament 3 has no unified Schema class and exposes display-format
+        // defaults through static properties on the Infolist and the Table.
+        // The ISO display formats only exist from Filament 4 onwards, so they
+        // are intentionally omitted here.
+        Infolists\Infolist::$defaultCurrency = $formats['currency'] ?? 'brl';
+        Infolists\Infolist::$defaultDateDisplayFormat = $formats['date_display_format'] ?? 'M j, Y';
+        Infolists\Infolist::$defaultDateTimeDisplayFormat = $formats['datetime_display_format'] ?? 'M j, Y H:i:s';
+        Infolists\Infolist::$defaultTimeDisplayFormat = $formats['time_display_format'] ?? 'H:i:s';
+        Infolists\Infolist::$defaultNumberLocale = $formats['number_locale'] ?? null;
 
-        Tables\Table::configureUsing(function (Tables\Table $table) use ($formats) {
-            return $table
-                ->defaultCurrency($formats['currency'] ?? 'brl')
-                ->defaultDateDisplayFormat($formats['date_display_format'] ?? 'M j, Y')
-                ->defaultIsoDateDisplayFormat($formats['iso_date_display_format'] ?? 'L')
-                ->defaultDateTimeDisplayFormat($formats['datetime_display_format'] ?? 'M j, Y H:i:s')
-                ->defaultIsoDateTimeDisplayFormat($formats['iso_datetime_display_format'] ?? 'LLL')
-                ->defaultNumberLocale($formats['number_locale'] ?? null)
-                ->defaultTimeDisplayFormat($formats['time_display_format'] ?? 'H:i:s')
-                ->defaultIsoTimeDisplayFormat($formats['iso_time_display_format'] ?? 'LT');
-        });
+        Tables\Table::$defaultCurrency = $formats['currency'] ?? 'brl';
+        Tables\Table::$defaultDateDisplayFormat = $formats['date_display_format'] ?? 'M j, Y';
+        Tables\Table::$defaultDateTimeDisplayFormat = $formats['datetime_display_format'] ?? 'M j, Y H:i:s';
+        Tables\Table::$defaultTimeDisplayFormat = $formats['time_display_format'] ?? 'H:i:s';
+        Tables\Table::$defaultNumberLocale = $formats['number_locale'] ?? null;
     }
 }

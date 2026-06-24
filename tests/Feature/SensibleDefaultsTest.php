@@ -5,7 +5,6 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Pages\Page;
-use Filament\Support\Enums\Width;
 use Filament\Tables\Filters\SelectFilter;
 
 it('defaults selects to non-native', function () {
@@ -24,7 +23,7 @@ it('disables seconds on date-time pickers', function () {
 it('sets the default action modal width to medium', function () {
     $action = Action::make('save');
 
-    expect($action->getModalWidth())->toBe(Width::Medium);
+    expect($action->getModalWidth())->toBe('md');
 });
 
 it('defaults textareas to four rows', function () {
