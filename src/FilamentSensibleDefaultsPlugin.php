@@ -346,7 +346,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
 
         Schemas\Schema::configureUsing(function (Schemas\Schema $schema) use ($formats) {
             return $schema
-                ->defaultCurrency($formats['currency'] ?? 'brl')
+                ->defaultCurrency($formats['currency'] ?? 'usd')
                 ->defaultDateDisplayFormat($formats['date_display_format'] ?? 'M j, Y')
                 ->defaultIsoDateDisplayFormat($formats['iso_date_display_format'] ?? 'L')
                 ->defaultDateTimeDisplayFormat($formats['datetime_display_format'] ?? 'M j, Y H:i:s')
@@ -358,7 +358,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
 
         Tables\Table::configureUsing(function (Tables\Table $table) use ($formats) {
             return $table
-                ->defaultCurrency($formats['currency'] ?? 'brl')
+                ->defaultCurrency($formats['currency'] ?? 'usd')
                 ->defaultDateDisplayFormat($formats['date_display_format'] ?? 'M j, Y')
                 ->defaultIsoDateDisplayFormat($formats['iso_date_display_format'] ?? 'L')
                 ->defaultDateTimeDisplayFormat($formats['datetime_display_format'] ?? 'M j, Y H:i:s')

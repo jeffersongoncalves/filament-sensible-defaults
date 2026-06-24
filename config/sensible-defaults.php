@@ -67,7 +67,7 @@ return [
     */
 
     'formats' => [
-        'currency' => 'brl',
+        'currency' => 'usd',
         'date_display_format' => 'M j, Y',
         'iso_date_display_format' => 'L',
         'datetime_display_format' => 'M j, Y H:i:s',
