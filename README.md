@@ -1,14 +1,14 @@
 <div class="filament-hidden">
 
-![Filament Sensible Defaults](https://raw.githubusercontent.com/jeffersongoncalves/filament-sensible-defaults/1.x/art/jeffersongoncalves-filament-sensible-defaults.png)
+![Filament Sensible Defaults](https://raw.githubusercontent.com/jeffersongoncalves/filament-sensible-defaults/3.x/art/jeffersongoncalves-filament-sensible-defaults.png)
 
 </div>
 
 # Filament Sensible Defaults
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/jeffersongoncalves/filament-sensible-defaults.svg?style=flat-square)](https://packagist.org/packages/jeffersongoncalves/filament-sensible-defaults)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/jeffersongoncalves/filament-sensible-defaults/fix-php-code-style-issues.yml?branch=1.x&label=code%20style&style=flat-square)](https://github.com/jeffersongoncalves/filament-sensible-defaults/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3A1.x)
-[![Tests](https://img.shields.io/github/actions/workflow/status/jeffersongoncalves/filament-sensible-defaults/run-tests.yml?branch=1.x&label=tests&style=flat-square)](https://github.com/jeffersongoncalves/filament-sensible-defaults/actions?query=workflow%3Arun-tests+branch%3A1.x)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/jeffersongoncalves/filament-sensible-defaults/fix-php-code-style-issues.yml?branch=3.x&label=code%20style&style=flat-square)](https://github.com/jeffersongoncalves/filament-sensible-defaults/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3A3.x)
+[![Tests](https://img.shields.io/github/actions/workflow/status/jeffersongoncalves/filament-sensible-defaults/run-tests.yml?branch=3.x&label=tests&style=flat-square)](https://github.com/jeffersongoncalves/filament-sensible-defaults/actions?query=workflow%3Arun-tests+branch%3A3.x)
 [![Total Downloads](https://img.shields.io/packagist/dt/jeffersongoncalves/filament-sensible-defaults.svg?style=flat-square)](https://packagist.org/packages/jeffersongoncalves/filament-sensible-defaults)
 [![License](https://img.shields.io/packagist/l/jeffersongoncalves/filament-sensible-defaults.svg?style=flat-square)](LICENSE.md)
 
@@ -16,16 +16,18 @@ A Filament plugin that applies a curated set of sensible, opinionated UI default
 
 ## Compatibility
 
-| Branch  | Filament | PHP   | Laravel           |
-|---------|----------|-------|-------------------|
-| **1.x** | **5.x**  | **^8.3** | **^12.0 \| ^13.0** |
+| Branch  | Filament | PHP                  | Laravel              |
+|---------|----------|----------------------|----------------------|
+| `1.x`   | `^3.0`   | `^8.1 \| ^8.2 \| ^8.3` | `^10.0 \| ^11.0`      |
+| `2.x`   | `^4.0`   | `^8.2 \| ^8.3 \| ^8.4` | `^11.0 \| ^12.0`      |
+| `3.x`   | `^5.0`   | `^8.3`               | `^12.0 \| ^13.0`     |
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require jeffersongoncalves/filament-sensible-defaults
+composer require jeffersongoncalves/filament-sensible-defaults:^3.0
 ```
 
 Optionally publish the config file:
