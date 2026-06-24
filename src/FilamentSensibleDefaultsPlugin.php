@@ -345,13 +345,13 @@ class FilamentSensibleDefaultsPlugin implements Plugin
         // defaults through static properties on the Infolist and the Table.
         // The ISO display formats only exist from Filament 4 onwards, so they
         // are intentionally omitted here.
-        Infolists\Infolist::$defaultCurrency = $formats['currency'] ?? 'brl';
+        Infolists\Infolist::$defaultCurrency = $formats['currency'] ?? 'usd';
         Infolists\Infolist::$defaultDateDisplayFormat = $formats['date_display_format'] ?? 'M j, Y';
         Infolists\Infolist::$defaultDateTimeDisplayFormat = $formats['datetime_display_format'] ?? 'M j, Y H:i:s';
         Infolists\Infolist::$defaultTimeDisplayFormat = $formats['time_display_format'] ?? 'H:i:s';
         Infolists\Infolist::$defaultNumberLocale = $formats['number_locale'] ?? null;
 
-        Tables\Table::$defaultCurrency = $formats['currency'] ?? 'brl';
+        Tables\Table::$defaultCurrency = $formats['currency'] ?? 'usd';
         Tables\Table::$defaultDateDisplayFormat = $formats['date_display_format'] ?? 'M j, Y';
         Tables\Table::$defaultDateTimeDisplayFormat = $formats['datetime_display_format'] ?? 'M j, Y H:i:s';
         Tables\Table::$defaultTimeDisplayFormat = $formats['time_display_format'] ?? 'H:i:s';
