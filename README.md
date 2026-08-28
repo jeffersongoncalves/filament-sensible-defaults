@@ -103,6 +103,59 @@ return [
 ];
 ```
 
+### Fine-grained control
+
+Blocks that bundle more than one class also expose a matching sub-array so you can disable a single item without losing the rest of the block. The block switch is a master gate: turning it off disables every sub-item regardless of their own setting.
+
+```php
+return [
+    // ...
+
+    'actions' => [
+        'action_group' => true,
+        'action' => true,
+        'create_action' => true,
+        'edit_action' => true,
+        'delete_action' => false, // opt DeleteAction out, keep everything else in action_defaults
+        'view_action' => true,
+    ],
+
+    'select' => [
+        'native' => true,
+        'selectable_placeholder' => true,
+        'searchable' => true,
+        'preload' => true,
+    ],
+
+    'datetime' => [
+        'seconds' => true,
+        'max_date' => true,
+    ],
+
+    'repeater' => [
+        'repeater' => true,
+        'builder' => true,
+    ],
+
+    'form' => [
+        'toggle_buttons' => true,
+        'text_input' => true,
+        'textarea' => true,
+    ],
+
+    'page' => [
+        'validation_notification' => true,
+        'sticky_form_actions' => true,
+    ],
+
+    'table' => [
+        'table' => true,
+        'image_column' => true,
+        'select_filter' => true,
+    ],
+];
+```
+
 ## Testing
 
 ```bash
