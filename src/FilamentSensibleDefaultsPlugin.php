@@ -189,6 +189,11 @@ class FilamentSensibleDefaultsPlugin implements Plugin
         return $override ?? (bool) config("sensible-defaults.{$key}", true);
     }
 
+    protected function isItemEnabled(string $group, string $item): bool
+    {
+        return (bool) config("sensible-defaults.{$group}.{$item}", true);
+    }
+
     protected function applyTranslateLabels(): void
     {
         Forms\Components\Field::configureUsing(function (Forms\Components\Field $field) {
@@ -206,69 +211,99 @@ class FilamentSensibleDefaultsPlugin implements Plugin
 
     protected function applyActionDefaults(): void
     {
-        Actions\ActionGroup::configureUsing(function (Actions\ActionGroup $action) {
-            return $action->icon(Heroicon::EllipsisVertical);
-        });
+        if ($this->isItemEnabled('actions', 'action_group')) {
+            Actions\ActionGroup::configureUsing(function (Actions\ActionGroup $action) {
+                return $action->icon(Heroicon::EllipsisVertical);
+            });
+        }
 
-        Actions\Action::configureUsing(function (Actions\Action $action) {
-            return $action
-                ->translateLabel()
-                ->modalWidth(Width::Medium)
-                ->closeModalByClickingAway(false);
-        });
+        if ($this->isItemEnabled('actions', 'action')) {
+            Actions\Action::configureUsing(function (Actions\Action $action) {
+                return $action
+                    ->translateLabel()
+                    ->modalWidth(Width::Medium)
+                    ->closeModalByClickingAway(false);
+            });
+        }
 
-        Actions\CreateAction::configureUsing(function (Actions\CreateAction $action) {
-            return $action
-                ->icon(Heroicon::Plus)
-                ->hiddenLabel()
-                ->createAnother(false);
-        });
+        if ($this->isItemEnabled('actions', 'create_action')) {
+            Actions\CreateAction::configureUsing(function (Actions\CreateAction $action) {
+                return $action
+                    ->icon(Heroicon::Plus)
+                    ->hiddenLabel()
+                    ->createAnother(false);
+            });
+        }
 
-        Actions\EditAction::configureUsing(function (Actions\EditAction $action) {
-            return $action
-                ->icon(Heroicon::PencilSquare)
-                ->hiddenLabel()
-                ->button();
-        });
+        if ($this->isItemEnabled('actions', 'edit_action')) {
+            Actions\EditAction::configureUsing(function (Actions\EditAction $action) {
+                return $action
+                    ->icon(Heroicon::PencilSquare)
+                    ->hiddenLabel()
+                    ->button();
+            });
+        }
 
-        Actions\DeleteAction::configureUsing(function (Actions\DeleteAction $action) {
-            return $action
-                ->icon(Heroicon::Trash)
-                ->hiddenLabel()
-                ->button();
-        });
+        if ($this->isItemEnabled('actions', 'delete_action')) {
+            Actions\DeleteAction::configureUsing(function (Actions\DeleteAction $action) {
+                return $action
+                    ->icon(Heroicon::Trash)
+                    ->hiddenLabel()
+                    ->button();
+            });
+        }
 
-        Actions\ViewAction::configureUsing(function (Actions\ViewAction $action) {
-            return $action
-                ->icon(Heroicon::Eye)
-                ->hiddenLabel()
-                ->button();
-        });
+        if ($this->isItemEnabled('actions', 'view_action')) {
+            Actions\ViewAction::configureUsing(function (Actions\ViewAction $action) {
+                return $action
+                    ->icon(Heroicon::Eye)
+                    ->hiddenLabel()
+                    ->button();
+            });
+        }
     }
 
     protected function applySelectDefaults(): void
     {
         Forms\Components\Select::configureUsing(function (Forms\Components\Select $component) {
-            return $component
-                ->native(false)
-                ->selectablePlaceholder(function (Forms\Components\Select $component) {
+            if ($this->isItemEnabled('select', 'native')) {
+                $component->native(false);
+            }
+
+            if ($this->isItemEnabled('select', 'selectable_placeholder')) {
+                $component->selectablePlaceholder(function (Forms\Components\Select $component) {
                     return ! $component->isRequired();
-                })
-                ->searchable(function (Forms\Components\Select $component) {
+                });
+            }
+
+            if ($this->isItemEnabled('select', 'searchable')) {
+                $component->searchable(function (Forms\Components\Select $component) {
                     return $component->hasRelationship();
-                })
-                ->preload(function (Forms\Components\Select $component) {
+                });
+            }
+
+            if ($this->isItemEnabled('select', 'preload')) {
+                $component->preload(function (Forms\Components\Select $component) {
                     return $component->isSearchable();
                 });
+            }
+
+            return $component;
         });
     }
 
     protected function applyDateTimeDefaults(): void
     {
         Forms\Components\DateTimePicker::configureUsing(function (Forms\Components\DateTimePicker $component) {
-            return $component
-                ->seconds(false)
-                ->maxDate('9999-12-31T23:59');
+            if ($this->isItemEnabled('datetime', 'seconds')) {
+                $component->seconds(false);
+            }
+
+            if ($this->isItemEnabled('datetime', 'max_date')) {
+                $component->maxDate('9999-12-31T23:59');
+            }
+
+            return $component;
         });
     }
 
@@ -281,63 +316,83 @@ class FilamentSensibleDefaultsPlugin implements Plugin
 
     protected function applyRepeaterDefaults(): void
     {
-        Forms\Components\Repeater::configureUsing(function (Forms\Components\Repeater $component) {
-            return $component->deleteAction(function (Actions\Action $action) {
-                return $action->requiresConfirmation();
+        if ($this->isItemEnabled('repeater', 'repeater')) {
+            Forms\Components\Repeater::configureUsing(function (Forms\Components\Repeater $component) {
+                return $component->deleteAction(function (Actions\Action $action) {
+                    return $action->requiresConfirmation();
+                });
             });
-        });
+        }
 
-        Forms\Components\Builder::configureUsing(function (Forms\Components\Builder $component) {
-            return $component->deleteAction(function (Actions\Action $action) {
-                return $action->requiresConfirmation();
+        if ($this->isItemEnabled('repeater', 'builder')) {
+            Forms\Components\Builder::configureUsing(function (Forms\Components\Builder $component) {
+                return $component->deleteAction(function (Actions\Action $action) {
+                    return $action->requiresConfirmation();
+                });
             });
-        });
+        }
     }
 
     protected function applyFormDefaults(): void
     {
-        Forms\Components\ToggleButtons::configureUsing(function (Forms\Components\ToggleButtons $component) {
-            return $component
-                ->inline()
-                ->grouped();
-        });
+        if ($this->isItemEnabled('form', 'toggle_buttons')) {
+            Forms\Components\ToggleButtons::configureUsing(function (Forms\Components\ToggleButtons $component) {
+                return $component
+                    ->inline()
+                    ->grouped();
+            });
+        }
 
-        Forms\Components\TextInput::configureUsing(function (Forms\Components\TextInput $component) {
-            return $component->minValue(0);
-        });
+        if ($this->isItemEnabled('form', 'text_input')) {
+            Forms\Components\TextInput::configureUsing(function (Forms\Components\TextInput $component) {
+                return $component->minValue(0);
+            });
+        }
 
-        Forms\Components\Textarea::configureUsing(function (Forms\Components\Textarea $component) {
-            return $component->rows(4);
-        });
+        if ($this->isItemEnabled('form', 'textarea')) {
+            Forms\Components\Textarea::configureUsing(function (Forms\Components\Textarea $component) {
+                return $component->rows(4);
+            });
+        }
     }
 
     protected function applyPageDefaults(): void
     {
-        Pages\Page::$reportValidationErrorUsing = function (ValidationException $exception) {
-            Notifications\Notification::make()
-                ->title($exception->getMessage())
-                ->danger()
-                ->send();
-        };
+        if ($this->isItemEnabled('page', 'validation_notification')) {
+            Pages\Page::$reportValidationErrorUsing = function (ValidationException $exception) {
+                Notifications\Notification::make()
+                    ->title($exception->getMessage())
+                    ->danger()
+                    ->send();
+            };
+        }
 
-        Pages\Page::$formActionsAreSticky = false;
+        if ($this->isItemEnabled('page', 'sticky_form_actions')) {
+            Pages\Page::$formActionsAreSticky = false;
+        }
     }
 
     protected function applyTableDefaults(): void
     {
-        Tables\Table::configureUsing(function (Tables\Table $table) {
-            return $table
-                ->filtersFormWidth('md')
-                ->paginationPageOptions([5, 10, 25, 50]);
-        });
+        if ($this->isItemEnabled('table', 'table')) {
+            Tables\Table::configureUsing(function (Tables\Table $table) {
+                return $table
+                    ->filtersFormWidth('md')
+                    ->paginationPageOptions([5, 10, 25, 50]);
+            });
+        }
 
-        Tables\Columns\ImageColumn::configureUsing(function (Tables\Columns\ImageColumn $column) {
-            return $column->extraImgAttributes(['loading' => 'lazy']);
-        });
+        if ($this->isItemEnabled('table', 'image_column')) {
+            Tables\Columns\ImageColumn::configureUsing(function (Tables\Columns\ImageColumn $column) {
+                return $column->extraImgAttributes(['loading' => 'lazy']);
+            });
+        }
 
-        Tables\Filters\SelectFilter::configureUsing(function (Tables\Filters\SelectFilter $filter) {
-            return $filter->native(false);
-        });
+        if ($this->isItemEnabled('table', 'select_filter')) {
+            Tables\Filters\SelectFilter::configureUsing(function (Tables\Filters\SelectFilter $filter) {
+                return $filter->native(false);
+            });
+        }
     }
 
     protected function applyFormatDefaults(): void
