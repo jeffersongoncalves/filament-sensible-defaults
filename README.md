@@ -16,11 +16,11 @@ A Filament plugin that applies a curated set of sensible, opinionated UI default
 
 ## Compatibility
 
-| Branch  | Filament | PHP                  | Laravel              |
-|---------|----------|----------------------|----------------------|
-| `1.x`   | `^3.0`   | `^8.1 \| ^8.2 \| ^8.3` | `^10.0 \| ^11.0`      |
-| `2.x`   | `^4.0`   | `^8.2 \| ^8.3 \| ^8.4` | `^11.0 \| ^12.0`      |
-| `3.x`   | `^5.0`   | `^8.3`               | `^12.0 \| ^13.0`     |
+| Branch  | Filament |
+|---------|----------|
+| `1.x`   | `^3.0`   |
+| `2.x`   | `^4.0`   |
+| `3.x`   | `^5.0`   |
 
 ## Installation
 
