@@ -2,6 +2,10 @@
 
 All notable changes to `filament-sensible-defaults` will be documented in this file.
 
+## 2.1.0 - 2026-08-28
+
+**Full Changelog**: https://github.com/jeffersongoncalves/filament-sensible-defaults/compare/2.0.1...2.1.0
+
 ## 2.0.1 - 2026-06-23
 
 Default currency changed to USD.
