@@ -2,13 +2,16 @@
 
 namespace JeffersonGoncalves\Filament\SensibleDefaults;
 
+use Closure;
 use Filament\Actions;
 use Filament\Contracts\Plugin;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Infolists;
 use Filament\Notifications;
 use Filament\Pages;
 use Filament\Panel;
+use Filament\Support\Components\ComponentManager;
 use Filament\Tables;
 use Illuminate\Validation\ValidationException;
 
@@ -186,6 +189,17 @@ class FilamentSensibleDefaultsPlugin implements Plugin
         return $override ?? (bool) config("sensible-defaults.{$key}", true);
     }
 
+    /**
+     * Same registry `Component::configureUsing()` writes to, but keyed by a
+     * class-string so the component class isn't autoloaded at boot. Callbacks
+     * are still registered during boot, so later application-level
+     * `configureUsing()` overrides keep winning.
+     */
+    protected function configureUsing(string $component, Closure $modifyUsing): void
+    {
+        ComponentManager::resolve()->configureUsing($component, $modifyUsing);
+    }
+
     protected function isItemEnabled(string $group, string $item): bool
     {
         return (bool) config("sensible-defaults.{$group}.{$item}", true);
@@ -193,15 +207,15 @@ class FilamentSensibleDefaultsPlugin implements Plugin
 
     protected function applyTranslateLabels(): void
     {
-        Forms\Components\Field::configureUsing(function (Forms\Components\Field $field) {
+        $this->configureUsing(Forms\Components\Field::class, function (Forms\Components\Field $field) {
             return $field->translateLabel();
         });
 
-        Infolists\Components\Entry::configureUsing(function (Infolists\Components\Entry $entry) {
+        $this->configureUsing(Infolists\Components\Entry::class, function (Infolists\Components\Entry $entry) {
             return $entry->translateLabel();
         });
 
-        Tables\Columns\Column::configureUsing(function (Tables\Columns\Column $column) {
+        $this->configureUsing(Tables\Columns\Column::class, function (Tables\Columns\Column $column) {
             return $column->translateLabel();
         });
     }
@@ -209,13 +223,13 @@ class FilamentSensibleDefaultsPlugin implements Plugin
     protected function applyActionDefaults(): void
     {
         if ($this->isItemEnabled('actions', 'action_group')) {
-            Actions\ActionGroup::configureUsing(function (Actions\ActionGroup $action) {
+            $this->configureUsing(Actions\ActionGroup::class, function (Actions\ActionGroup $action) {
                 return $action->icon('heroicon-m-ellipsis-vertical');
             });
         }
 
         if ($this->isItemEnabled('actions', 'action')) {
-            Actions\Action::configureUsing(function (Actions\Action $action) {
+            $this->configureUsing(Actions\Action::class, function (Actions\Action $action) {
                 return $action
                     ->translateLabel()
                     ->modalWidth('md')
@@ -224,7 +238,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
         }
 
         if ($this->isItemEnabled('actions', 'create_action')) {
-            Actions\CreateAction::configureUsing(function (Actions\CreateAction $action) {
+            $this->configureUsing(Actions\CreateAction::class, function (Actions\CreateAction $action) {
                 return $action
                     ->icon('heroicon-m-plus')
                     ->hiddenLabel()
@@ -233,7 +247,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
         }
 
         if ($this->isItemEnabled('actions', 'edit_action')) {
-            Actions\EditAction::configureUsing(function (Actions\EditAction $action) {
+            $this->configureUsing(Actions\EditAction::class, function (Actions\EditAction $action) {
                 return $action
                     ->icon('heroicon-m-pencil-square')
                     ->hiddenLabel()
@@ -242,7 +256,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
         }
 
         if ($this->isItemEnabled('actions', 'delete_action')) {
-            Actions\DeleteAction::configureUsing(function (Actions\DeleteAction $action) {
+            $this->configureUsing(Actions\DeleteAction::class, function (Actions\DeleteAction $action) {
                 return $action
                     ->icon('heroicon-m-trash')
                     ->hiddenLabel()
@@ -251,7 +265,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
         }
 
         if ($this->isItemEnabled('actions', 'view_action')) {
-            Actions\ViewAction::configureUsing(function (Actions\ViewAction $action) {
+            $this->configureUsing(Actions\ViewAction::class, function (Actions\ViewAction $action) {
                 return $action
                     ->icon('heroicon-m-eye')
                     ->hiddenLabel()
@@ -262,7 +276,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
 
     protected function applySelectDefaults(): void
     {
-        Forms\Components\Select::configureUsing(function (Forms\Components\Select $component) {
+        $this->configureUsing(Forms\Components\Select::class, function (Forms\Components\Select $component) {
             if ($this->isItemEnabled('select', 'native')) {
                 $component->native(false);
             }
@@ -291,7 +305,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
 
     protected function applyDateTimeDefaults(): void
     {
-        Forms\Components\DateTimePicker::configureUsing(function (Forms\Components\DateTimePicker $component) {
+        $this->configureUsing(Forms\Components\DateTimePicker::class, function (Forms\Components\DateTimePicker $component) {
             if ($this->isItemEnabled('datetime', 'seconds')) {
                 $component->seconds(false);
             }
@@ -306,7 +320,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
 
     protected function applyFileUploadDefaults(): void
     {
-        Forms\Components\FileUpload::configureUsing(function (Forms\Components\FileUpload $component) {
+        $this->configureUsing(Forms\Components\FileUpload::class, function (Forms\Components\FileUpload $component) {
             return $component->moveFiles();
         });
     }
@@ -314,7 +328,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
     protected function applyRepeaterDefaults(): void
     {
         if ($this->isItemEnabled('repeater', 'repeater')) {
-            Forms\Components\Repeater::configureUsing(function (Forms\Components\Repeater $component) {
+            $this->configureUsing(Forms\Components\Repeater::class, function (Forms\Components\Repeater $component) {
                 return $component->deleteAction(function (Actions\Action $action) {
                     return $action->requiresConfirmation();
                 });
@@ -322,7 +336,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
         }
 
         if ($this->isItemEnabled('repeater', 'builder')) {
-            Forms\Components\Builder::configureUsing(function (Forms\Components\Builder $component) {
+            $this->configureUsing(Forms\Components\Builder::class, function (Forms\Components\Builder $component) {
                 return $component->deleteAction(function (Actions\Action $action) {
                     return $action->requiresConfirmation();
                 });
@@ -333,7 +347,7 @@ class FilamentSensibleDefaultsPlugin implements Plugin
     protected function applyFormDefaults(): void
     {
         if ($this->isItemEnabled('form', 'toggle_buttons')) {
-            Forms\Components\ToggleButtons::configureUsing(function (Forms\Components\ToggleButtons $component) {
+            $this->configureUsing(Forms\Components\ToggleButtons::class, function (Forms\Components\ToggleButtons $component) {
                 return $component
                     ->inline()
                     ->grouped();
@@ -341,13 +355,13 @@ class FilamentSensibleDefaultsPlugin implements Plugin
         }
 
         if ($this->isItemEnabled('form', 'text_input')) {
-            Forms\Components\TextInput::configureUsing(function (Forms\Components\TextInput $component) {
+            $this->configureUsing(Forms\Components\TextInput::class, function (Forms\Components\TextInput $component) {
                 return $component->minValue(0);
             });
         }
 
         if ($this->isItemEnabled('form', 'textarea')) {
-            Forms\Components\Textarea::configureUsing(function (Forms\Components\Textarea $component) {
+            $this->configureUsing(Forms\Components\Textarea::class, function (Forms\Components\Textarea $component) {
                 return $component->rows(4);
             });
         }
@@ -355,24 +369,27 @@ class FilamentSensibleDefaultsPlugin implements Plugin
 
     protected function applyPageDefaults(): void
     {
+        // Pages only exist inside a panel, so these statics are set once
+        // Filament is serving, without loading the Page class at boot.
+        // `??=` keeps a renderer the application registered during boot.
+        // `formActionsAreSticky` is left alone: Filament already defaults it
+        // to false, and re-setting it here would clobber app overrides.
         if ($this->isItemEnabled('page', 'validation_notification')) {
-            Pages\Page::$reportValidationErrorUsing = function (ValidationException $exception) {
-                Notifications\Notification::make()
-                    ->title($exception->getMessage())
-                    ->danger()
-                    ->send();
-            };
-        }
-
-        if ($this->isItemEnabled('page', 'sticky_form_actions')) {
-            Pages\Page::$formActionsAreSticky = false;
+            Filament::serving(function () {
+                Pages\Page::$reportValidationErrorUsing ??= function (ValidationException $exception) {
+                    Notifications\Notification::make()
+                        ->title($exception->getMessage())
+                        ->danger()
+                        ->send();
+                };
+            });
         }
     }
 
     protected function applyTableDefaults(): void
     {
         if ($this->isItemEnabled('table', 'table')) {
-            Tables\Table::configureUsing(function (Tables\Table $table) {
+            $this->configureUsing(Tables\Table::class, function (Tables\Table $table) {
                 return $table
                     ->filtersFormWidth('md')
                     ->paginationPageOptions([5, 10, 25, 50]);
@@ -380,13 +397,13 @@ class FilamentSensibleDefaultsPlugin implements Plugin
         }
 
         if ($this->isItemEnabled('table', 'image_column')) {
-            Tables\Columns\ImageColumn::configureUsing(function (Tables\Columns\ImageColumn $column) {
+            $this->configureUsing(Tables\Columns\ImageColumn::class, function (Tables\Columns\ImageColumn $column) {
                 return $column->extraImgAttributes(['loading' => 'lazy']);
             });
         }
 
         if ($this->isItemEnabled('table', 'select_filter')) {
-            Tables\Filters\SelectFilter::configureUsing(function (Tables\Filters\SelectFilter $filter) {
+            $this->configureUsing(Tables\Filters\SelectFilter::class, function (Tables\Filters\SelectFilter $filter) {
                 return $filter->native(false);
             });
         }
@@ -400,6 +417,8 @@ class FilamentSensibleDefaultsPlugin implements Plugin
         // defaults through static properties on the Infolist and the Table.
         // The ISO display formats only exist from Filament 4 onwards, so they
         // are intentionally omitted here.
+        // ponytail: statics autoload Infolist/Table at boot; Filament 4+ moves
+        // these to configureUsing() and avoids that.
         Infolists\Infolist::$defaultCurrency = $formats['currency'] ?? 'usd';
         Infolists\Infolist::$defaultDateDisplayFormat = $formats['date_display_format'] ?? 'M j, Y';
         Infolists\Infolist::$defaultDateTimeDisplayFormat = $formats['datetime_display_format'] ?? 'M j, Y H:i:s';

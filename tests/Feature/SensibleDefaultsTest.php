@@ -1,6 +1,7 @@
 <?php
 
 use Filament\Actions\Action;
+use Filament\Events\ServingFilament;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -38,7 +39,28 @@ it('defaults select filters to non-native', function () {
     expect($filter->isNative())->toBeFalse();
 });
 
-it('registers a validation-error notification renderer on pages', function () {
+it('keeps application configureUsing overrides once Filament is serving', function () {
+    Select::configureUsing(fn (Select $select) => $select->native());
+
+    ServingFilament::dispatch();
+
+    expect(Select::make('country')->isNative())->toBeTrue();
+});
+
+it('registers a validation-error notification renderer on pages once Filament is serving', function () {
+    Page::$reportValidationErrorUsing = null;
+
+    ServingFilament::dispatch();
+
     expect(Page::$reportValidationErrorUsing)->toBeInstanceOf(Closure::class)
         ->and(Page::$formActionsAreSticky)->toBeFalse();
+});
+
+it('keeps an application validation-error renderer once Filament is serving', function () {
+    $renderer = function () {};
+    Page::$reportValidationErrorUsing = $renderer;
+
+    ServingFilament::dispatch();
+
+    expect(Page::$reportValidationErrorUsing)->toBe($renderer);
 });
