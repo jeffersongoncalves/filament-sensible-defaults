@@ -18,21 +18,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Lazy registration
-    |--------------------------------------------------------------------------
-    |
-    | When enabled (and `auto_register` is on), the defaults are applied only
-    | once Filament starts serving a panel request (`Filament::serving()`),
-    | so non-panel requests skip autoloading ~25 Filament classes at boot.
-    | Set this to false if you render Filament forms/tables outside a panel
-    | (e.g. standalone Livewire components), where `serving` never fires.
-    |
-    */
-
-    'lazy' => true,
-
-    /*
-    |--------------------------------------------------------------------------
     | Default blocks
     |--------------------------------------------------------------------------
     |
