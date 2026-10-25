@@ -42,6 +42,8 @@ php artisan vendor:publish --tag=filament-sensible-defaults-config
 
 By default the plugin **auto-registers** and applies every enabled block of defaults globally — no panel wiring required. Just install it and your panels inherit the defaults.
 
+Auto-registered defaults are applied lazily, when Filament starts serving a panel request (`Filament::serving()`), so non-panel requests (e.g. your public site) pay no boot cost. If you render Filament forms/tables outside a panel (standalone Livewire components), set `lazy` to `false` in `config/sensible-defaults.php` to apply them eagerly at boot.
+
 If you prefer explicit, per-panel control, set `auto_register` to `false` in `config/sensible-defaults.php` and register the plugin on your `PanelProvider`:
 
 ```php
@@ -80,6 +82,7 @@ Each block is a boolean toggle and the display formats are fully customisable in
 ```php
 return [
     'auto_register' => true,
+    'lazy' => true,
 
     'translate_labels' => true,
     'action_defaults' => true,
