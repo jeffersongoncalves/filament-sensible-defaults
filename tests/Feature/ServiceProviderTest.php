@@ -23,6 +23,15 @@ it('exposes a plugin with a stable id', function () {
     expect(FilamentSensibleDefaultsPlugin::make()->getId())->toBe('filament-sensible-defaults');
 });
 
+it('applies auto-registered defaults at boot', function () {
+    $plugin = Mockery::spy(FilamentSensibleDefaultsPlugin::class);
+    app()->instance(FilamentSensibleDefaultsPlugin::class, $plugin);
+
+    (new FilamentSensibleDefaultsServiceProvider(app()))->packageBooted();
+
+    $plugin->shouldHaveReceived('apply')->once();
+});
+
 it('resolves the registered plugin from the panel', function () {
     expect(FilamentSensibleDefaultsPlugin::get())
         ->toBeInstanceOf(FilamentSensibleDefaultsPlugin::class);
